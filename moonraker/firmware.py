@@ -409,6 +409,9 @@ class FirmwareComponent:
         communication = web_request.get("communication", "USB (on PA11/PA12)")
         initial_pins = web_request.get("initial_pins", "")
 
+        all_args = web_request.get_args()
+        logger.info(f"Build request: platform={platform}, model={model}, all_args={all_args}")
+
         self.build_log = []
         self.build_status = "building"
 
@@ -455,7 +458,10 @@ class FirmwareComponent:
         if self.build_status == "building":
             return {"status": "error", "message": "Build in progress, cannot flash"}
 
-        flash_device = web_request.get("flash_device", "")
+        # Get flash_device from args, default to 0483:df11 if not provided
+        flash_device = web_request.get("flash_device", "0483:df11")
+        all_args = web_request.get_args()
+        logger.info(f"Flash request: flash_device='{flash_device}', all_args={all_args}")
         self.build_log = []
         self.build_status = "flashing"
 
@@ -468,7 +474,15 @@ class FirmwareComponent:
             self.build_log.append(f"Flashing firmware...")
             result = await self._run_command(cmd, self.klipper_path)
 
-            if result["returncode"] == 0:
+            # Check if firmware was downloaded successfully
+            # dfu-util may report "can't detach" error but firmware is already flashed
+            log_text = "\n".join(self.build_log)
+            flash_success = (
+                "File downloaded successfully" in log_text or
+                "Download done" in log_text
+            )
+
+            if result["returncode"] == 0 or flash_success:
                 self.build_status = "success"
                 self.build_log.append("Flash completed successfully!")
             else:
@@ -557,19 +571,22 @@ class FirmwareComponent:
         """Generate .config content for Klipper"""
         lines = []
 
-        # Set architecture
-        arch_map = {
-            "STM32": "MACH_STM32",
-            "RP2040": "MACH_RPXXXX",
-            "LPC176x": "MACH_LPC176X",
-            "AVR": "MACH_AVR"
-        }
-        arch = arch_map.get(platform, "MACH_STM32")
-        lines.append(f"CONFIG_{arch}=y")
+        # Base config
+        lines.append("CONFIG_LOW_LEVEL_OPTIONS=y")
+
+        # Platform selection
+        if platform == "STM32":
+            lines.append("CONFIG_MACH_STM32=y")
+        elif platform == "RP2040":
+            lines.append("CONFIG_MACH_RPXXXX=y")
+        elif platform == "LPC176x":
+            lines.append("CONFIG_MACH_LPC176X=y")
+        elif platform == "AVR":
+            lines.append("CONFIG_MACH_AVR=y")
 
         # Set model
         model_config = model.upper().replace(" ", "_")
-        lines.append(f"CONFIG_{model_config}=y")
+        lines.append(f"CONFIG_MACH_{model_config}=y")
 
         # Set clock reference
         if clock_ref and platform == "STM32":
@@ -644,13 +661,22 @@ class FirmwareComponent:
             cmd,
             cwd=cwd,
             stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.STDOUT
+            stderr=asyncio.subprocess.PIPE
         )
         self.build_process = process
 
-        # Read output line by line
+        # Read stdout line by line
         while True:
             line = await process.stdout.readline()
+            if not line:
+                break
+            line_str = line.decode().strip()
+            if line_str:
+                self.build_log.append(line_str)
+
+        # Read stderr line by line
+        while True:
+            line = await process.stderr.readline()
             if not line:
                 break
             line_str = line.decode().strip()
