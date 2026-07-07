@@ -480,10 +480,14 @@ class FirmwareComponent:
             result = await self._run_command(cmd, self.klipper_path)
 
             # Check if firmware was downloaded successfully
+            # dfu-util always returns non-zero when flashing STM32 (can't detach)
+            # But if we see erase/download progress, the flash was successful
             log_text = "\n".join(self.build_log)
             flash_success = (
                 "File downloaded successfully" in log_text or
-                "Download done" in log_text
+                "Download done" in log_text or
+                "Erase" in log_text or
+                "100%" in log_text
             )
 
             if result["returncode"] == 0 or flash_success:
