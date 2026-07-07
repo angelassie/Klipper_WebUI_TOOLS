@@ -1,0 +1,36 @@
+﻿manufacturer,model,platform,mcu,clock,bootloader,connection,description
+BigTreeTech,SKR V1.4,LPC176x,LPC1768,12 MHz crystal,128KiB bootloader,USB (P0.31/P0.30),SKR V1.4 32位打印机主板
+BigTreeTech,SKR V1.4 Turbo,LPC176x,LPC1769,12 MHz crystal,128KiB bootloader,USB (P0.31/P0.30),SKR V1.4 Turbo 高性能版本
+BigTreeTech,SKR 2,STM32,STM32F429,8 MHz crystal,32KiB bootloader,USB (PA11/PA12),SKR 2 双Z轴主板
+BigTreeTech,SKR 3,STM32,STM32H743,25 MHz crystal,128KiB bootloader,USB (PA11/PA12),SKR 3 高性能主板
+BigTreeTech,SKR Mini E3 V2.0,STM32,STM32F103,8 MHz crystal,32KiB bootloader,USB (PA11/PA12),SKR Mini E3 V2.0 迷你主板
+BigTreeTech,SKR Mini E3 V3.0,STM32,STM32G0B1,8 MHz crystal,8KiB bootloader,USB (PA11/PA12),SKR Mini E3 V3.0 升级版
+BigTreeTech,SKR Pico,RP2040,rp2040,,16KiB bootloader,USBSERIAL (GPIO0/GPIO1),SKR Pico RP2040主板
+BigTreeTech,SKR Pro V1.1,STM32,STM32F407,8 MHz crystal,128KiB bootloader,USB (PA11/PA12),SKR Pro V1.1 专业主板
+BigTreeTech,SKR Pro V1.2,STM32,STM32F407,8 MHz crystal,128KiB bootloader,USB (PA11/PA12),SKR Pro V1.2 升级版
+BigTreeTech,Manta M8P V1.0,STM32,STM32G431,25 MHz crystal,128KiB bootloader,USB (PA11/PA12),Manta M8P 8驱主板
+BigTreeTech,Manta M4P V2.0,STM32,STM32F407,8 MHz crystal,128KiB bootloader,USB (PA11/PA12),Manta M4P 4驱主板
+BigTreeTech,Manta E3 EZ V1.0,STM32,STM32G0B1,8 MHz crystal,8KiB bootloader,USB (PA11/PA12),Manta E3 EZ 入门主板
+Creality,Ender 3 V2,STM32,STM32F103,8 MHz crystal,16KiB bootloader,USB (PA11/PA12),Creality Ender 3 V2 主板
+Creality,CR-6 SE,STM32,STM32F103,8 MHz crystal,16KiB bootloader,USB (PA11/PA12),Creality CR-6 SE 主板
+Creality,CR-10 Smart Pro,STM32,STM32F103,8 MHz crystal,16KiB bootloader,USB (PA11/PA12),Creality CR-10 Smart Pro 主板
+FLY,FLY F407 V1,STM32,STM32F407,8 MHz crystal,128KiB bootloader,USB (PA11/PA12),FLY F407 V1 主板
+FLY,FLY F446 V1,STM32,STM32F446,25 MHz crystal,128KiB bootloader,USB (PA11/PA12),FLY F446 V1 高性能主板
+FLY,FLY CEB,STM32,STM32F407,8 MHz crystal,128KiB bootloader,USB (PA11/PA12),FLY CEB 挤出机主板
+FLY,FLY SUPER8,STM32,STM32H743,25 MHz crystal,128KiB bootloader,USB (PA11/PA12),FLY SUPER8 8驱主板
+FYSETC,Cheetah V2.0,STM32,STM32F072,8 MHz crystal,16KiB bootloader,USB (PA11/PA12),Cheetah V2.0 迷你主板
+FYSETC,Cheetah V3.0,STM32,STM32G0B1,8 MHz crystal,8KiB bootloader,USB (PA11/PA12),Cheetah V3.0 升级版
+FYSETC,Big Dipper,STM32,STM32F446,25 MHz crystal,128KiB bootloader,USB (PA11/PA12),Big Dipper 北斗七星主板
+FYSETC,Spider V1.0,STM32,STM32F446,25 MHz crystal,128KiB bootloader,USB (PA11/PA12),Spider V1.0 蜘蛛主板
+FYSETC,Spider V2.2,STM32,STM32F446,25 MHz crystal,128KiB bootloader,USB (PA11/PA12),Spider V2.2 升级版
+FYSETC,Spider KING,STM32,STM32H723,25 MHz crystal,128KiB bootloader,USB (PA11/PA12),Spider KING 蜘蛛王主板
+LDO,LDO-42STH48-2504AC,STM32,STM32F103,8 MHz crystal,32KiB bootloader,USB (PA11/PA12),LDO NEMA17 电机
+Makerbase,MKS Robin Nano V1.2,STM32,STM32F103,8 MHz crystal,32KiB bootloader,USB (PA11/PA12),MKS Robin Nano V1.2
+Makerbase,MKS Robin Nano V2.0,STM32,STM32F407,8 MHz crystal,128KiB bootloader,USB (PA11/PA12),MKS Robin Nano V2.0
+Makerbase,MKS Robin Nano V3.0,STM32,STM32F446,25 MHz crystal,128KiB bootloader,USB (PA11/PA12),MKS Robin Nano V3.0
+Makerbase,MKS SKIPR V1.0,STM32,STM32H723,25 MHz crystal,128KiB bootloader,USB (PA11/PA12),MKS SKIPR V1.0
+Makerbase,MKS Monster8 V1.0,STM32,STM32F446,25 MHz crystal,128KiB bootloader,USB (PA11/PA12),MKS Monster8 V1.0 8驱主板
+Makerbase,MKS SGEN L V1.0,LPC176x,LPC1769,12 MHz crystal,128KiB bootloader,USB (P0.31/P0.30),MKS SGEN L V1.0
+Makerbase,MKS SGEN L V2.0,LPC176x,LPC1769,12 MHz crystal,128KiB bootloader,USB (P0.31/P0.30),MKS SGEN L V2.0
+Makerbase,MKS Base V1.0,STM32,STM32F103,8 MHz crystal,32KiB bootloader,USB (PA11/PA12),MKS Base V1.0 基础主板
+Makerbase,MKS Gen L V2.1,STM32,STM32F103,8 MHz crystal,32KiB bootloader,USB (PA11/PA12),MKS Gen L V2.1
