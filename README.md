@@ -9,6 +9,8 @@ Extend Klipper 3D printer system with additional WebUI features. Supports Mainsa
 - **Firmware Flash** - DFU mode auto-flash support
 - **Firmware Download** - Download compiled firmware to local machine
 
+> **Note:** Board preset feature is currently under development and not recommended for use. Please use custom configuration for now.
+
 ### Software Management
 - **KlipperScreen** - Touchscreen GUI install/update
 - **Crowsnest** - Webcam streaming service install/update
