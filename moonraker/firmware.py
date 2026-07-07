@@ -461,9 +461,9 @@ class FirmwareComponent:
 
         try:
             if flash_device:
-                cmd = f"cd {self.klipper_path} && make flash FLASH_DEVICE={flash_device}"
+                cmd = f"echo '123456' | sudo -S bash -c 'cd {self.klipper_path} && make flash FLASH_DEVICE={flash_device}'"
             else:
-                cmd = f"cd {self.klipper_path} && make flash"
+                cmd = f"echo '123456' | sudo -S bash -c 'cd {self.klipper_path} && make flash'"
 
             self.build_log.append(f"Flashing firmware...")
             result = await self._run_command(cmd, self.klipper_path)
