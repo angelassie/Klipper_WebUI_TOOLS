@@ -466,16 +466,20 @@ class FirmwareComponent:
         self.build_status = "flashing"
 
         try:
-            if flash_device:
-                cmd = f"echo '123456' | sudo -S bash -c 'cd {self.klipper_path} && make flash FLASH_DEVICE={flash_device}'"
-            else:
-                cmd = f"echo '123456' | sudo -S bash -c 'cd {self.klipper_path} && make flash'"
+            # Use dfu-util directly for better control
+            firmware_path = os.path.join(self.klipper_path, "out", "klipper.bin")
+            if not os.path.exists(firmware_path):
+                self.build_status = "failed"
+                self.build_log.append("Firmware file not found. Please build firmware first.")
+                return {"status": "failed", "log": self.build_log}
 
-            self.build_log.append(f"Flashing firmware...")
+            # Flash command using dfu-util directly
+            cmd = f"echo '123456' | sudo -S dfu-util -d ,{flash_device} -a 0 -s 0x800c000:leave -D {firmware_path}"
+
+            self.build_log.append(f"Flashing firmware to {flash_device}...")
             result = await self._run_command(cmd, self.klipper_path)
 
             # Check if firmware was downloaded successfully
-            # dfu-util may report "can't detach" error but firmware is already flashed
             log_text = "\n".join(self.build_log)
             flash_success = (
                 "File downloaded successfully" in log_text or
@@ -484,7 +488,7 @@ class FirmwareComponent:
 
             if result["returncode"] == 0 or flash_success:
                 self.build_status = "success"
-                self.build_log.append("Flash completed successfully!")
+                self.build_log.append("Flash completed successfully! Device will reboot.")
             else:
                 self.build_status = "failed"
                 self.build_log.append(f"Flash failed with return code {result['returncode']}")
