@@ -504,24 +504,34 @@ class FirmwareComponent:
     async def _handle_firmware_dfu(self, web_request):
         """Detect DFU devices"""
         try:
-            # Run lsusb to detect USB devices
-            result = await self._run_command("lsusb", "/")
+            # Run lsusb directly to detect USB devices
+            process = await asyncio.create_subprocess_shell(
+                "lsusb",
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await process.communicate()
+
             dfu_devices = []
-            if result["returncode"] == 0:
-                for line in result.get("output", []):
+            if process.returncode == 0:
+                output = stdout.decode()
+                for line in output.split('\n'):
+                    line = line.strip()
+                    if not line:
+                        continue
                     # Look for common DFU device IDs
                     if "0483:df11" in line.lower():  # STM32 DFU
-                        dfu_devices.append({"type": "STM32 DFU", "info": line.strip()})
+                        dfu_devices.append({"type": "STM32 DFU", "info": line})
                     elif "1eaf:0003" in line.lower():  # STM32 Maple DFU
-                        dfu_devices.append({"type": "STM32 Maple DFU", "info": line.strip()})
+                        dfu_devices.append({"type": "STM32 Maple DFU", "info": line})
                     elif "1209:beba" in line.lower():  # CanBoot/Katapult
-                        dfu_devices.append({"type": "CanBoot/Katapult", "info": line.strip()})
+                        dfu_devices.append({"type": "CanBoot/Katapult", "info": line})
                     elif "1d50:6177" in line.lower():  # CanBoot
-                        dfu_devices.append({"type": "CanBoot", "info": line.strip()})
+                        dfu_devices.append({"type": "CanBoot", "info": line})
                     elif "2e8a:0003" in line.lower():  # RP2040
-                        dfu_devices.append({"type": "RP2040", "info": line.strip()})
+                        dfu_devices.append({"type": "RP2040", "info": line})
                     elif "2e8a:000f" in line.lower():  # RP2350
-                        dfu_devices.append({"type": "RP2350", "info": line.strip()})
+                        dfu_devices.append({"type": "RP2350", "info": line})
             return {
                 "devices": dfu_devices,
                 "has_device": len(dfu_devices) > 0
