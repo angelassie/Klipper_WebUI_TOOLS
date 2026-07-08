@@ -34,6 +34,14 @@ This project is designed for:
 - Users who understand and accept the security implications
 - Development and testing environments
 
+## Screenshots
+
+### Mainsail
+![Mainsail Tools](docs/screenshots/mainsail-example.png)
+
+### Fluidd
+![Fluidd Tools](docs/screenshots/fluidd-example.png)
+
 ## Features
 
 ### Firmware Management
