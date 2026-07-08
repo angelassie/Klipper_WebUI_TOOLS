@@ -362,6 +362,11 @@ class FirmwareComponent:
             "/server/software/log", ["GET"], self._handle_software_log
         )
 
+        # Linux command execution endpoint
+        self.server.register_endpoint(
+            "/server/firmware/exec", ["POST"], self._handle_exec_command
+        )
+
         # Build state
         self.build_process = None
         self.build_log = []
@@ -1068,6 +1073,48 @@ requirements: requirements.txt
             "log": self.software_log,
             "status": self.software_status
         }
+
+    async def _handle_exec_command(self, web_request):
+        """Execute a Linux command on the host machine"""
+        command = web_request.get("command", "")
+        if not command:
+            return {"status": "error", "message": "No command specified"}
+
+        # Security: block dangerous commands
+        dangerous_commands = ["rm -rf /", "mkfs", "dd if=", "> /dev/", "shutdown", "reboot"]
+        for dangerous in dangerous_commands:
+            if dangerous in command.lower():
+                return {"status": "error", "message": f"Blocked dangerous command: {dangerous}"}
+
+        logger.info(f"Executing command: {command}")
+
+        try:
+            # Execute the command
+            process = await asyncio.create_subprocess_shell(
+                command,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await process.communicate()
+
+            output = stdout.decode().strip()
+            error = stderr.decode().strip()
+
+            if process.returncode == 0:
+                return {
+                    "status": "success",
+                    "output": output,
+                    "returncode": process.returncode
+                }
+            else:
+                return {
+                    "status": "error",
+                    "output": output,
+                    "error": error,
+                    "returncode": process.returncode
+                }
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
 
 
 def load_component(config):
