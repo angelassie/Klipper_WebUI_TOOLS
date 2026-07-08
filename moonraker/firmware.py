@@ -473,8 +473,8 @@ class FirmwareComponent:
                 self.build_log.append("Firmware file not found. Please build firmware first.")
                 return {"status": "failed", "log": self.build_log}
 
-            # Flash command using dfu-util directly
-            cmd = f"echo '123456' | sudo -S dfu-util -d ,{flash_device} -a 0 -s 0x800c000:leave -D {firmware_path}"
+            # Flash command using dfu-util directly (requires sudoers NOPASSWD)
+            cmd = f"sudo dfu-util -d ,{flash_device} -a 0 -s 0x800c000:leave -D {firmware_path}"
 
             self.build_log.append(f"Flashing firmware to {flash_device}...")
             result = await self._run_command(cmd, self.klipper_path)

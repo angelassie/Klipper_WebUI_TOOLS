@@ -73,6 +73,46 @@ check_environment() {
     print_success "检测到 WebUI: $WEBUI"
 }
 
+# 配置 sudoers 免密权限
+configure_sudoers() {
+    print_info "配置 sudo 免密权限..."
+
+    local username=$(whoami)
+    local sudoers_file="/etc/sudoers.d/klipper-tools"
+
+    # 检查是否已配置
+    if [ -f "$sudoers_file" ]; then
+        print_info "sudoers 配置已存在，跳过"
+        return 0
+    fi
+
+    # 检查 sudo 权限
+    if ! sudo -n true 2>/dev/null; then
+        print_warning "需要输入 sudo 密码来配置免密权限"
+        echo "请输入 sudo 密码（输入时不显示）:"
+    fi
+
+    # 创建 sudoers 配置
+    {
+        echo "# Klipper WebUI Tools - sudo 免密配置"
+        echo "# 此文件允许当前用户执行以下命令而无需输入密码"
+        echo "$username ALL=(ALL) NOPASSWD: /usr/bin/dfu-util"
+        echo "$username ALL=(ALL) NOPASSWD: /usr/bin/make"
+        echo "$username ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart moonraker"
+        echo "$username ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart klipper"
+    } | sudo tee "$sudoers_file" > /dev/null
+
+    # 设置正确的权限
+    sudo chmod 440 "$sudoers_file"
+
+    print_success "sudoers 配置完成"
+    print_info "允许的命令:"
+    echo "  - dfu-util (固件刷写)"
+    echo "  - make (编译固件)"
+    echo "  - systemctl restart moonraker"
+    echo "  - systemctl restart klipper"
+}
+
 # 安装 Moonraker 组件
 install_moonraker_component() {
     print_info "安装 Moonraker 固件组件..."
@@ -206,6 +246,7 @@ main() {
     echo ""
 
     check_environment
+    configure_sudoers
     install_moonraker_component
     install_webui
     set_permissions
