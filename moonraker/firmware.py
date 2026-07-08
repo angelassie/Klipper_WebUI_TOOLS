@@ -935,16 +935,16 @@ requirements: requirements.txt
             # BACKEND - Graphical backend X11 or Wayland (X/W)
             # NETWORK - Install NetworkManager (Y/n)
             if "service" in options:
-                env_vars += f"SERVICE={options['service']}; "
+                env_vars += f"SERVICE={options['service']} "
             if "backend" in options:
-                env_vars += f"BACKEND={options['backend']}; "
+                env_vars += f"BACKEND={options['backend']} "
             if "network" in options:
-                env_vars += f"NETWORK={options['network']}; "
+                env_vars += f"NETWORK={options['network']} "
 
         # Run install script with environment variables
         self.software_log.append(f"Running install script...")
-        # Set variables directly in the command
-        install_cmd = f"{env_vars}{info['install']}"
+        # Use 'env' command to set environment variables properly
+        install_cmd = f"env {env_vars}{info['install']}"
         result = await self._run_software_command(
             install_cmd,
             info["path"]
