@@ -138,13 +138,13 @@ install_webui() {
     local webui_dir="$HOME/$WEBUI"
     local src_dir="$SCRIPT_DIR/$WEBUI/dist"
 
-    # 备份原目录
+    # 备份原目录（使用 sudo 处理权限问题）
     if [ -d "$webui_dir" ]; then
         print_warning "备份原 $WEBUI 目录..."
         if [ -d "${webui_dir}.bak" ]; then
-            rm -rf "${webui_dir}.bak"
+            sudo rm -rf "${webui_dir}.bak" 2>/dev/null || rm -rf "${webui_dir}.bak"
         fi
-        mv "$webui_dir" "${webui_dir}.bak"
+        sudo mv "$webui_dir" "${webui_dir}.bak" 2>/dev/null || mv "$webui_dir" "${webui_dir}.bak"
     fi
 
     # 创建新目录
@@ -157,6 +157,9 @@ install_webui() {
     if [ -f "$SCRIPT_DIR/mcu_boards.csv" ]; then
         cp "$SCRIPT_DIR/mcu_boards.csv" "$webui_dir/"
     fi
+
+    # 设置正确的权限
+    sudo chown -R "$(whoami):$(whoami)" "$webui_dir" 2>/dev/null || true
 
     print_success "$WEBUI 前端安装完成"
 }
